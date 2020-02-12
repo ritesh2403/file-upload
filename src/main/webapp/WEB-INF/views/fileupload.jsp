@@ -10,7 +10,7 @@
 <body>
 hello file upload jsp
 
-<form action="fileupload" method="POST">
+<form  id="fileupload" enctype="multipart/form-data" onsubmit="return false;">
 <input type="file" id="file" multiple="multiple">
 	<button onClick="upload()">upload</button>
 
@@ -28,15 +28,15 @@ function upload(){
 		});
 	$.ajax({
 	
-		url:'/fileupload',
+		url:'fileupload',
 		data:data,
 		cache:false, 
-		
 		contentType:false,
 		processData:false,
 		type:'POST',
 		success:function(response){
 		    if(response.status==200){
+		    	
 		    	alert(response.uploadedfile);
 		    }else{
 		    	alert("error");

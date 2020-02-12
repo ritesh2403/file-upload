@@ -2,6 +2,7 @@ package Controller;
 
 
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ import Service.CustomerServiceImp;
 @Component
 @RequestMapping("customer")
 public class CustomerController {
-
+	private static final String ABS_PATH="D:\\ghora\\eclipse-workspace\\springmvc\\src\\main\\webapp\\WEB-INF\\images"; 
+	private static  String REAL_PATH="";
 	@Autowired
 	private CustomerServiceImp service;
 
@@ -49,16 +51,29 @@ public class CustomerController {
 	@RequestMapping(value="/fileupload",method=RequestMethod.POST)
 	public @ResponseBody Map<String,Object> fileUpload(MultipartHttpServletRequest request,HttpServletResponse response){
 	System.out.println("in fileupload");
-		List<String>list=new ArrayList<String>();
+	REAL_PATH=request.getSession().getServletContext().getRealPath("/WEB-INF/images");
+	System.out.println("REAL_PATH");	
+	List<String>list=new ArrayList<String>();
 		Map<String,Object>map=new HashMap<String,Object>();
 		Iterator<String> itr=request.getFileNames();
 		MultipartFile mpf=null;
+		
+		//to make sure all directories exist please create
+		if(!new File(ABS_PATH).exists()) {
+			//create directories
+			new File(ABS_PATH).mkdirs();
+		}
+		
+		if(!new File(REAL_PATH).exists()) {
+			//create directories
+			new File(REAL_PATH).mkdirs();
+		}
 		while(itr.hasNext()) {
 			mpf=request.getFile(itr.next());
 			
 			  try { // FileCopyUtils.copy(context.getRealPath("resources")+ "/"+ mpf.getBytes(),new FileOutputStream(mpf.getOriginalFilename().replace(" ","-")));
 	
-				  FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(context.getRealPath("resources")+"/"+mpf.getOriginalFilename().replace(" ","")));
+				  FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(REAL_PATH+"/"+mpf.getOriginalFilename().replace(" ","-")));
 				  list.add(mpf.getOriginalFilename().replace(" ", "-"));
 			  
 			  }
