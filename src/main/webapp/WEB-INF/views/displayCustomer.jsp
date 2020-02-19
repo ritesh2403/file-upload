@@ -36,8 +36,11 @@
 
 
 			</c:forEach>
+			
 
 		</table>
+		<c:url var="xlsurl" value="/customer/list/?type=xls"></c:url>
+			<a href="${xlsurl}">download excel</a>
 	</form>
 </body>
 </html>

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import Entity.Customer;
+import Excel.ExcelDocument;
 import Service.CustomerServiceImp;
 
 @Component
@@ -88,10 +90,16 @@ public class CustomerController {
 	
 	
 	@RequestMapping("/list")
-	public ModelAndView listCustomers(Model themodel) {
+	public ModelAndView listCustomers(Model themodel,HttpServletRequest request,HttpServletResponse response) {
+		String x="invalid format of file";
 		ModelAndView mv = new ModelAndView();
+		String type=request.getParameter("type");
 		Customer c = new Customer();
 		List<Customer> customer = service.customers();
+		if(type!=null && type.equalsIgnoreCase("xls")) {
+			return new ModelAndView(new ExcelDocument(),"customers",customer);
+		}
+		
 		c.setCustomers(customer);
 		mv.addObject("customers", customer);
 		mv.setViewName("displayCustomer");
